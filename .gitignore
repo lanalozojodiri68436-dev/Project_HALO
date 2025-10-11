@@ -1,6 +1,16 @@
-﻿__pycache__/
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.class
+
+# Logs
 logs/
 *.log
-*.pyc
+
+# Virtual environments
+venv/
+.env/
+
+# VSCode / IDE
 .vscode/
-assets/voices/
+.idea/
