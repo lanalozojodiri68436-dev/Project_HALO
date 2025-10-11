@@ -1,0 +1,4 @@
+2025-10-11 10:28:37 | INFO     | src.main_app.logger_setup:setup_logging:50 - Logger has been initialized.
+2025-10-11 10:28:37 | INFO     | __main__:__init__:25 - Initializing HALOApp...
+2025-10-11 10:28:37 | INFO     | __main__:__init__:28 - HALOApp initialized successfully.
+2025-10-11 10:28:37 | INFO     | __main__:run:34 - HALO alive
