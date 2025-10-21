@@ -1,6 +1,9 @@
 # Core dependencies
 loguru
 python-dotenv
+pyttsx3
+SpeechRecognition
+pyaudio
 
 # Development/Testing dependencies
 pytest
