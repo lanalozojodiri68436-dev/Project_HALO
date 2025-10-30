@@ -7,3 +7,4 @@ pyaudio
 
 # Development/Testing dependencies
 pytest
+google-genai

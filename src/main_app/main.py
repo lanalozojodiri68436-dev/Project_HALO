@@ -1,48 +1,51 @@
 # -*- coding: utf-8 -*-
 """
-Main Application Entry Point for HALO
-=====================================
-
-This script defines the HALOApp class and starts the application.
+Main Application Entry Point for HALO (Phase 3 - State Manager Integrated)
+=========================================================================
+Instantiating and injecting the StateManager.
 """
 from loguru import logger
 from .logger_setup import setup_logging
-
-# 导入所有核心模块
 from .config_manager import ConfigManager
-from .state_manager import StateManager
-from .plugin_manager import PluginManager
+from .state_manager import StateManager 
+from .plugin_manager import PluginManager 
 from .voice_module import VoiceModule
 from .ui_interface import UIDashboard
 from .core_dispatcher import CoreDispatcher
+from .conversation_plugin import ConversationPlugin
+from .tool_registry import load_tools
 
 class HALOApp:
     """The main application class for HALO."""
     
     def __init__(self):
         """
-        Initializes the HALO application by setting up logging,
-        and instantiating all core modules.
+        Initializes HALO: logging, config, state manager, tools, core modules.
         """
         setup_logging()
-        logger.info("Initializing HALOApp (Phase 2)...")
+        logger.info("Initializing HALOApp (Phase 3 - StateManager Integrated)...")
         
-        # 实例化所有模块
         self.config_manager = ConfigManager()
+        gemini_api_key = self.config_manager.get("GEMINI_API_KEY")
+
+        # Instantiate StateManager early
         self.state_manager = StateManager()
-        self.plugin_manager = PluginManager()
+
+        self.registered_tools = load_tools()
+
+        # Instantiate other core modules
+        self.plugin_manager = PluginManager() 
         self.voice_module = VoiceModule()
         self.ui_dashboard = UIDashboard()
+        self.conversation_plugin = ConversationPlugin(api_key=gemini_api_key)
         
-        # 在调度器初始化之前加载插件
-        self.plugin_manager.load_plugins()
-        
-        # 调度器是最后一个初始化，将所有模块链接在一起
+        # Pass the state_manager instance to the dispatcher
         self.dispatcher = CoreDispatcher(
             voice_module=self.voice_module,
             ui_dashboard=self.ui_dashboard,
-            plugin_manager=self.plugin_manager,
-            state_manager=self.state_manager
+            state_manager=self.state_manager, # <-- Inject StateManager
+            conversation_plugin=self.conversation_plugin,
+            tools=self.registered_tools 
         )
         
         logger.info("HALOApp initialized successfully.")
@@ -50,9 +53,7 @@ class HALOApp:
     def run(self):
         """Starts the execution of the application."""
         logger.info("HALO is alive.")
-        # 主运行调用现在会启动 UI 的主循环
         self.ui_dashboard.run()
-
 
 def main():
     """Main function to create and run the HALOApp instance."""
